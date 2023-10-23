@@ -1,11 +1,15 @@
-import { Fragment } from "react";
-
 const title = "Hello World";
+const style = { color: "red", backgroundColor: "blue" };
 
 function App() {
+  const handleClick = (e) => {
+    e.preventDefault();
+    alert("J'ai cliqué sur le titre");
+  };
+
   return (
     <>
-      <h1 id="title" className="title" auto>
+      <h1 onClick={handleClick} id="title" className="title" style={style}>
         {title}
       </h1>
       <input type="text" />
