@@ -1,29 +1,17 @@
 import { useState } from "react";
 
 function App() {
-  const [firstname, setFirstname] = useState("John doe");
-
-  const handleChange = (e) => {
-    setFirstname(e.target.value);
-  };
-
-  const reset = () => {
-    setFirstname("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(new FormData(e.target));
   };
 
   return (
     <>
-      <form>
-        <input
-          type="text"
-          name="firstname"
-          value={firstname}
-          onChange={handleChange}
-        />
-        {firstname}
-        <button onClick={reset} type="button">
-          Reset
-        </button>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="firstname" defaultValue="my nale" />
+
+        <button>Reset</button>
       </form>
     </>
   );
