@@ -1,22 +1,30 @@
 import { useState } from "react";
 
-const title = "Hello World";
-const style = { color: "red", backgroundColor: "blue" };
-const showtitle = false;
-
-const todos = ["Présenter réact", "Présenter le JSX", "Créer des composants"];
-
 function App() {
-  const [count, setCount] = useState(0);
+  const [firstname, setFirstname] = useState("John doe");
 
-  const increment = () => {
-    setCount(count + 1);
+  const handleChange = (e) => {
+    setFirstname(e.target.value);
+  };
+
+  const reset = () => {
+    setFirstname("");
   };
 
   return (
     <>
-      <p>Compteur: {count}</p>
-      <button onClick={increment}>Incrementer</button>
+      <form>
+        <input
+          type="text"
+          name="firstname"
+          value={firstname}
+          onChange={handleChange}
+        />
+        {firstname}
+        <button onClick={reset} type="button">
+          Reset
+        </button>
+      </form>
     </>
   );
 }
