@@ -1,19 +1,97 @@
+import { Checkbox } from "./component/forms/checkbox";
+import { Input } from "./component/forms/input";
+import { Range } from "./component/forms/range";
+import { ProductCategoryRow } from "./component/products/ProductCategoryRow";
+import { ProductRow } from "./component/products/ProductRow";
 import { useState } from "react";
 
+const PRODUCTS = [
+  { category: "Fruits", price: "$1", stocked: true, name: "Apple" },
+  { category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit" },
+  { category: "Fruits", price: "$2", stocked: false, name: "Passionfruit" },
+  { category: "Vegetables", price: "$2", stocked: true, name: "Spinach" },
+  { category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin" },
+  { category: "Vegetables", price: "$1", stocked: true, name: "Peas" },
+];
+
 function App() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(new FormData(e.target));
-  };
+  const [showStockedOnly, setShowStockedOnly] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const visibleProducts = PRODUCTS.filter((product) => {
+    if (showStockedOnly && !product.stocked) {
+      return false;
+    }
+
+    if (search && !product.name.includes(search)) {
+      return false;
+    }
+
+    return true;
+  });
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="firstname" defaultValue="my nale" />
+    <div className="container my-3">
+      <SearchBar
+        search={search}
+        onSearchChange={setSearch}
+        showStockedOnly={showStockedOnly}
+        onStockedOnlyChange={setShowStockedOnly}
+      />
+      <ProductTable products={visibleProducts} />
+    </div>
+  );
+}
 
-        <button>Reset</button>
-      </form>
-    </>
+function SearchBar({
+  showStockedOnly,
+  onStockedOnlyChange,
+  search,
+  onSearchChange,
+}) {
+  return (
+    <div>
+      <div className="mb-3">
+        <Input
+          value={search}
+          onChange={onSearchChange}
+          placeholder="Rechecher..."
+        />
+        <Range id="price" label="filtrer" min={0} max={10} />
+        <Checkbox
+          id="stocked"
+          checked={showStockedOnly}
+          onChange={onStockedOnlyChange}
+          label="N'afficher que les produits en stock"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ProductTable({ products }) {
+  const rows = [];
+  let lastCategory = null;
+
+  for (let product of products) {
+    if (product.category !== lastCategory) {
+      rows.push(
+        <ProductCategoryRow key={product.category} name={product.category} />
+      );
+    }
+    lastCategory = product.category;
+    rows.push(<ProductRow product={product} key={product.name}></ProductRow>);
+  }
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prix</th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
   );
 }
 
